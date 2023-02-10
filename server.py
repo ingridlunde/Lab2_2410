@@ -5,14 +5,14 @@ def main():
     # Read data from the client and print
     # Creation of the socket
     server_sd = socket(AF_INET, SOCK_STREAM)
-    server_ip = '192.168.10.118'
-    port = 1200
+    port = 12000
 
     # Bind the adress from the socket
-    server_sd.bind((server_ip, port))
+    server_sd.bind(('', port))
 
     # Activate listening on the socket
     server_sd.listen(1)
+    print('The server is ready to receive')
 
     # Server waits on accept() for incoming request, new socket created on return
     conn_sd, addr = server_sd.accept()
@@ -26,5 +26,4 @@ def main():
     conn_sd.send(received_line.encode())
 
     # Close both sockets
-    conn_sd.close()
     server_sd.close()

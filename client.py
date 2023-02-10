@@ -5,9 +5,9 @@ from socket import *
 def main():
     message = "Hello, World!"
     # creation of the socket
-    client_sd = socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_sd = socket(AF_INET, SOCK_STREAM)
     server_ip = '192.168.10.118'
-    port = 1200
+    port = 12000
 
     # Connect to the server
     client_sd.connect((server_ip, port))
@@ -22,4 +22,5 @@ def main():
     print(recieved_line)
 
     # Close the socket
+
     client_sd.close()
