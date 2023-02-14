@@ -7,6 +7,8 @@ def main():
     # creation of the socket
     client_sd = socket(AF_INET, SOCK_STREAM)
     server_ip = '192.168.10.118'
+
+    #gethostname(hostname)
     port = 12000
 
     # Connect to the server
