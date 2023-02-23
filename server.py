@@ -25,19 +25,19 @@ def handle_client(connection, addr):
 
     message = "A new client has joined us."
 
-    # A Append the new client to the list.
+    # Append the new client to the list.
     all_client_connections.append()
 
     while True:
         message = connection.recv(2048).decode()
         print(now() + " " + str(addr) + "#  ", message)
-        if (message == "exit" or not message):
+        if message == "exit" or not message:
             break
 
-        ### Write your code here ###
+        # Write your code here ###
         # broadcast this message to the others
 
-        ### Your code ends here ###
+        # Your code ends here ###
 
         connection.close()
         all_client_connections.remove(connection)
@@ -60,7 +60,7 @@ def main():
     and spawns a new thread whenever a new connection join
     """
 
-    host = gethostname()
+    host = socket.gethostname()
     server_port = 12000
     server_socket = socket(AF_INET, SOCK_STREAM)
     try:
@@ -69,20 +69,29 @@ def main():
         print("Bind failed. Error : ")
         sys.exit()
 
-    # Blir det riktig å sette den her? Ikke del av except?
+    print('Socket bind complete')
     server_socket.listen(10)
     print('The server is ready to receive')
 
+    # Forver loop until client wants to exit
     while True:
         # accept a connection
         # client eller connection socket her?
-        (client_socket, addr) = server_socket.accept()
-
+        (connection, addr) = server_socket.accept()
         print('Server connected by ', addr)
         print('at ', now())
-        connection = thread.start_new_thread(handleClient, (client_socket, addr))
+
+        data = connection.recv(2048).decode()
+        if not data:
+            # if data is not received.
+            break
+        print("From connected user: " + str(data))
+        data = input('->')
+        # send data to the client
+        connection.send(data.encode())
+        # Start a new thread and return its identifier
+        #thread.start_new_thread(handle_client(client_socket, addr))
         # Har lagt til denne, er det riktig?
-        connection.run()
 
     serverSocket.close()
 
