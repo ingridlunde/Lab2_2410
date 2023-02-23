@@ -1,29 +1,91 @@
+"""
+Server side: it simultaneously handles multiple clients
+and broadcast when a client new client joins or a client
+sends a message.
+"""
 from socket import *
+import _thread as thread
+import time
+import sys
+
+# this is to keep all the newly joined connections!
+# Array to keep control over newly joined connections.
+all_client_connections = []
+
+
+def now():
+    # Returns time of day
+    return time.ctime(time.time())
+
+
+# A client handler function
+def handle_client(connection, addr):
+    # Broadcast everyone that a new client has joined
+    # create a message to inform all other clients
+
+    message = "A new client has joined us."
+
+    # A Append the new client to the list.
+    all_client_connections.append()
+
+    while True:
+        message = connection.recv(2048).decode()
+        print(now() + " " + str(addr) + "#  ", message)
+        if (message == "exit" or not message):
+            break
+
+        ### Write your code here ###
+        # broadcast this message to the others
+
+        ### Your code ends here ###
+
+        connection.close()
+        all_client_connections.remove(connection)
+
+
+# Keep track of total number of clients
+def broadcast(connection, message):
+    print("Broadcasting")
+
+    # Notify everyone when a new client joins
+    # Broadcast a message from a client to everyone.
+
+    ### Write your code here ###
+    ### Your code ends here ###
 
 
 def main():
-    # Read data from the client and print
-    # Creation of the socket
-    server_sd = socket(AF_INET, SOCK_STREAM)
-    port = 12000
+    """
+    creates a server socket, listens for new connections,
+    and spawns a new thread whenever a new connection join
+    """
 
-    # Bind the adress from the socket
-    server_sd.bind(('', port))
+    host = gethostname()
+    server_port = 12000
+    server_socket = socket(AF_INET, SOCK_STREAM)
+    try:
+        server_socket.bind(host, server_port)
+    except:
+        print("Bind failed. Error : ")
+        sys.exit()
 
-    # Activate listening on the socket
-    server_sd.listen(1)
+    # Blir det riktig å sette den her? Ikke del av except?
+    server_socket.listen(10)
     print('The server is ready to receive')
 
-    # Server waits on accept() for incoming request, new socket created on return
-    conn_sd, addr = server_sd.accept()
+    while True:
+        # accept a connection
+        # client eller connection socket her?
+        (client_socket, addr) = server_socket.accept()
 
-    # Read data from the client
-    received_line = conn_sd.recv(1024).decode()
-    # Print data sent from the client
-    print(received_line)
+        print('Server connected by ', addr)
+        print('at ', now())
+        connection = thread.start_new_thread(handleClient, (client_socket, addr))
+        # Har lagt til denne, er det riktig?
+        connection.run()
 
-    # Send back data over the connection
-    conn_sd.send(received_line.encode())
+    serverSocket.close()
 
-    # Close both sockets
-    server_sd.close()
+
+if __name__ == '__main__':
+    main()
