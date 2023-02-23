@@ -3,6 +3,7 @@ Server side: it simultaneously handles multiple clients
 and broadcast when a client new client joins or a client
 sends a message.
 """
+import socket
 from socket import *
 import _thread as thread
 import time
@@ -23,35 +24,35 @@ def handle_client(connection, addr):
     # Broadcast everyone that a new client has joined
     # create a message to inform all other clients
 
-    message = "A new client has joined us."
-
     # Append the new client to the list.
-    all_client_connections.append()
+    all_client_connections.append(connection)
+
+    print("A new client has joined us")
 
     while True:
-        message = connection.recv(2048).decode()
-        print(now() + " " + str(addr) + "#  ", message)
-        if message == "exit" or not message:
+        data = connection.recv(2048).decode()
+        print(now() + " " + str(addr) + "#  ", data)
+        if data == "exit" or not data:
             break
 
-        # Write your code here ###
+        print(data)
         # broadcast this message to the others
 
         # Your code ends here ###
 
-        connection.close()
-        all_client_connections.remove(connection)
+    connection.close()
+    all_client_connections.remove(connection)
 
 
 # Keep track of total number of clients
 def broadcast(connection, message):
     print("Broadcasting")
 
+    for client in all_client_connections:
+        client.send(f"[{now()}] {message}".encode())
+
     # Notify everyone when a new client joins
     # Broadcast a message from a client to everyone.
-
-    ### Write your code here ###
-    ### Your code ends here ###
 
 
 def main():
@@ -60,11 +61,14 @@ def main():
     and spawns a new thread whenever a new connection join
     """
 
-    host = socket.gethostname()
-    server_port = 12000
+# Hav skal stå på host gethostname()?, tom string, eller en IP?
     server_socket = socket(AF_INET, SOCK_STREAM)
+    host = '127.0.0.1'
+    port = 5000
+
     try:
-        server_socket.bind(host, server_port)
+        server_socket.bind(host, port)
+
     except:
         print("Bind failed. Error : ")
         sys.exit()
@@ -90,10 +94,10 @@ def main():
         # send data to the client
         connection.send(data.encode())
         # Start a new thread and return its identifier
-        #thread.start_new_thread(handle_client(client_socket, addr))
+        thread.start_new_thread(handle_client(connection, addr))
         # Har lagt til denne, er det riktig?
 
-    serverSocket.close()
+    connection.close()
 
 
 if __name__ == '__main__':

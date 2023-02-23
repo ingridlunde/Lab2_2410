@@ -10,10 +10,11 @@ def main():
 
     # Server ip, port and connect
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_ip = '127.0.0.2'
-    port = 12000
+    host = '127.0.0.1'
+    port = 5000
 
-    client_socket.connect(server_ip, port)
+    # Connection to the server
+    client_socket.connect(host, port)
 
     # Denne skal bort etterhvert
     client_socket.sendall("Hello everyone")
@@ -25,7 +26,7 @@ while True:
     socket)
     """
     # Var oprinneliv client_socket tilslutt i melding. Hvorfor gikk ikke det?
-    inputs = [sys.stdin, socket.socket(socket.AF_INET, socket.SOCK_STREAM)]
+    inputs = [sys.stdin, socket.socket(socket.AF_INET, socket.SOCK_STREAM), ]
 
     """ read the select documentations - You pass select three lists: the 
     first contains all sockets that you might want to try reading; the 
